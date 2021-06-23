@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useEffect} from "react";
+import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchAllUsers} from "./friends/friendsSlice";
 
@@ -8,10 +8,6 @@ function App() {
     const friends = useSelector((state) => state.friends.list);
 
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        console.log(status, friends);
-    }, [status, friends]);
 
     const onGetFriends = () => {
         dispatch(fetchAllUsers());
