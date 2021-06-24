@@ -1,29 +1,58 @@
 import './App.css';
-import React from "react";
+import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchAllUsers} from "./friends/friendsSlice";
+import {addTodo, markComplete, markIncomplete, removeTodo} from "./todo/todoSlice";
 
 function App() {
-    const status = useSelector((state) =>  state.friends.status);
-    const friends = useSelector((state) => state.friends.list);
+    const [inputValue, setInputValue] = useState('');
+    const todos = useSelector((state) =>  state.todos);
 
     const dispatch = useDispatch();
 
-    const onGetFriends = () => {
-        dispatch(fetchAllUsers());
+    const onChange = e => {
+        setInputValue(e.target.value);
+    }
+
+    const add = () => {
+        dispatch(addTodo(inputValue));
+        setInputValue('');
+    }
+
+    const remove = (index) => () => {
+        dispatch(removeTodo(index));
+    }
+
+    const complete = (index) => () => {
+        dispatch(markComplete(index));
+    }
+
+    const incomplete = (index) => () => {
+        dispatch(markIncomplete(index));
     }
 
     return (
-        <div>
-            <button onClick={onGetFriends}>Get My Friends</button>
+        <div className="container">
+            <div>
+                <input type="text" onChange={onChange} value={inputValue} />
+                <button onClick={add} disabled={!inputValue}>Add Todo</button>
+            </div>
             {
-                status === 'loading' ? (
-                    <h1>Hang On</h1>
-                ) : (
+                todos.length === 0 ? <p>You haven't created any todos yet</p> : (
                     <ul>
                         {
-                            friends.map( (friend, index) =>
-                                <li key={index}>{`${friend.name.title} ${friend.name.first} ${friend.name.last}`}</li>
+                            todos.map(
+                                (todo, index) => (
+                                    <li>
+                                        {todo.title}
+                                        {
+                                            todo.completed ?
+                                            <button onClick={incomplete(index)}>Mark Incomplete</button>
+                                            :
+                                            <button onClick={complete(index)}>Mark Complete</button>
+                                        }
+                                        <button onClick={remove(index)}>Delete Todo</button>
+                                    </li>
+                                )
                             )
                         }
                     </ul>

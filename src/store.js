@@ -1,8 +1,8 @@
 import {configureStore} from "@reduxjs/toolkit";
-import FriendsReducer from "./friends/friendsSlice";
+import { TodoReducer } from "./todo/todoSlice";
 
 export default configureStore({
     reducer: {
-        friends: FriendsReducer
+        todos: TodoReducer
     }
 });
